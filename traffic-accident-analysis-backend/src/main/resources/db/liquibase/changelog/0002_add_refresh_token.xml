@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="0002-1-20241003-0840" author="milan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="refresh_token" />
+            </not>
+        </preConditions>
+
+        <createTable tableName="refresh_token">
+            <column name="refresh_token_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_refresh_token"/>
+            </column>
+            <column name="token" type="BIGINT">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unique_token"/>
+            </column>
+            <column name="expiry_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unique_user_id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="0002-2-20241003-0840" author="milan">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="refresh_token" />
+        </preConditions>
+
+        <addForeignKeyConstraint
+                baseTableName="refresh_token"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="user_id"
+                constraintName="fk_refresh_token_users"/>
+    </changeSet>
+
+</databaseChangeLog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
