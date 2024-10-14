@@ -10,5 +10,5 @@ public class LoginResponseWithJwtCookies {
     private final LoginResponse loginResponse;
     private final ResponseCookie accessTokenCookie;
     private final ResponseCookie refreshTokenCookie;
-    private final ResponseCookie csrfTokenCookie;
+    private final String csrfToken;
 }

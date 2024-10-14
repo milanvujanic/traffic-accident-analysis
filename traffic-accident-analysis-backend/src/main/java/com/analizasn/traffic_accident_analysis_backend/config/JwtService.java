@@ -1,5 +1,6 @@
 package com.analizasn.traffic_accident_analysis_backend.config;
 
+import com.analizasn.traffic_accident_analysis_backend.entity.enums.TokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
@@ -55,7 +56,7 @@ public class JwtService {
 
     public String extractCsrfToken(String token) {
         final Claims claims = extractAllClaims(token);
-        return claims.get("X-XSRF-TOKEN", String.class);
+        return claims.get(TokenType.CSRF_TOKEN.getTokenName(), String.class);
     }
 
     private <T> T claimsResolver(String token, Function<Claims, T> claimsResolver) {
@@ -79,7 +80,7 @@ public class JwtService {
     public String generateTokenFromUsername(String username) {
         String csrfToken = generateCsrfToken();
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("X-XSRF-TOKEN", csrfToken);
+        extraClaims.put(TokenType.CSRF_TOKEN.getTokenName(), csrfToken);
         return buildToken(extraClaims, username, accessTokenexpirationTime);
     }
 
@@ -112,11 +113,11 @@ public class JwtService {
 
     public ResponseCookie generateCsrfTokenCookie(String token) {
         return ResponseCookie
-                .from("X-XSRF-TOKEN", token)
+                .from(TokenType.CSRF_TOKEN.getTokenName(), token)
                 .path("/api")
                 .maxAge(accessTokenexpirationTime / 1000)
                 .httpOnly(false)
-                .sameSite("None")
+                .sameSite("strict")
                 .build();
     }
 
@@ -188,7 +189,7 @@ public class JwtService {
     }
 
     public Optional<String> getCsrfTokenFromCookie(HttpServletRequest httpServletRequest) {
-        return getTokenFromCookie(httpServletRequest, "X-XSRF-TOKEN");
+        return getTokenFromCookie(httpServletRequest, TokenType.CSRF_TOKEN.getTokenName());
     }
 
     private Optional<String> getTokenFromCookie(HttpServletRequest httpServletRequest, String name) {

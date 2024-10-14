@@ -5,8 +5,8 @@ import com.analizasn.traffic_accident_analysis_backend.entity.RefreshToken;
 import com.analizasn.traffic_accident_analysis_backend.entity.Role;
 import com.analizasn.traffic_accident_analysis_backend.entity.User;
 import com.analizasn.traffic_accident_analysis_backend.entity.enums.RoleEnum;
-import com.analizasn.traffic_accident_analysis_backend.exception.EmailExistsException;
-import com.analizasn.traffic_accident_analysis_backend.exception.UsernameExistsException;
+import com.analizasn.traffic_accident_analysis_backend.exception.EmailAlreadyTakenException;
+import com.analizasn.traffic_accident_analysis_backend.exception.UsernameAlreadyTakenException;
 import com.analizasn.traffic_accident_analysis_backend.payload.request.LoginRequest;
 import com.analizasn.traffic_accident_analysis_backend.payload.request.SignupRequest;
 import com.analizasn.traffic_accident_analysis_backend.payload.response.AccessAndRefreshTokenCookies;
@@ -21,7 +21,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,13 +52,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponseWithJwtCookies handleSignin(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        org.springframework.security.core.userdetails.User userDetails =
-                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
         User user = userService.findByUsername(loginRequest.getUsername());
 
@@ -69,13 +63,12 @@ public class AuthServiceImpl implements AuthService {
 
         LoginResponse loginResponse = new LoginResponse(loginRequest.getUsername(), user.getEmail(), roles);
 
-        return constructLoginResponseWithJwtCookies(loginResponse, userDetails, user);
+        return constructLoginResponseWithJwtCookies(loginResponse, user);
     }
 
     private LoginResponseWithJwtCookies constructLoginResponseWithJwtCookies(LoginResponse loginResponse,
-                                                                             org.springframework.security.core.userdetails.User userDetails,
                                                                              User user) {
-        String accessToken = jwtService.generateToken(userDetails);
+        String accessToken = jwtService.generateTokenFromUsername(loginResponse.getUsername());
         String csrfToken = jwtService.extractCsrfToken(accessToken);
 
         Optional<RefreshToken> refreshToken = refreshTokenService.findByUser(user);
@@ -96,19 +89,18 @@ public class AuthServiceImpl implements AuthService {
 
         ResponseCookie accessTokenCookie = jwtService.generateAccessTokenCookie(accessToken);
         ResponseCookie refreshTokenCookie = jwtService.generateRefreshTokenCookie(refreshTokenForResponse.getToken().toString());
-        ResponseCookie csrfTokenCookie = jwtService.generateCsrfTokenCookie(csrfToken);
 
-        return new LoginResponseWithJwtCookies(loginResponse, accessTokenCookie, refreshTokenCookie, csrfTokenCookie);
+        return new LoginResponseWithJwtCookies(loginResponse, accessTokenCookie, refreshTokenCookie, csrfToken);
     }
 
     @Override
     public void handleSignup(SignupRequest signupRequest) {
         if (userService.existsByUsername(signupRequest.getUsername())) {
-            throw new UsernameExistsException("Username is already taken!");
+            throw new UsernameAlreadyTakenException("Username is already taken!");
         }
 
         if (userService.existsByEmail(signupRequest.getEmail())) {
-            throw new EmailExistsException("Email address is already taken!");
+            throw new EmailAlreadyTakenException("Email address is already taken!");
         }
 
         handleUserSave(signupRequest);

@@ -35,12 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-//
-//        final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-//        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
 
         try {
             final Optional<String> accessToken = jwtService.getAccessTokenFromCookie(request);

@@ -1,5 +1,6 @@
 package com.analizasn.traffic_accident_analysis_backend.rest;
 
+import com.analizasn.traffic_accident_analysis_backend.entity.enums.TokenType;
 import com.analizasn.traffic_accident_analysis_backend.exception.RefreshTokenException;
 import com.analizasn.traffic_accident_analysis_backend.payload.request.LoginRequest;
 import com.analizasn.traffic_accident_analysis_backend.payload.request.SignupRequest;
@@ -31,7 +32,7 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, response.getRefreshTokenCookie().toString())
                 .header(HttpHeaders.SET_COOKIE, response.getAccessTokenCookie().toString())
-                .header("X-XSRF-TOKEN", response.getCsrfTokenCookie().toString())
+                .header(TokenType.CSRF_TOKEN.getTokenName(), response.getCsrfToken())
                 .body(response.getLoginResponse());
     }
 
