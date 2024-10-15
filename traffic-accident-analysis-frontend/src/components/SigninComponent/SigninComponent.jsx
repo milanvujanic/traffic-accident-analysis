@@ -1,16 +1,12 @@
 import styles from './SigninComponent.module.css'
-import axios from 'axios';
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import signinFormValidation from './SigninComponentValidation';
-import { useState } from 'react'
+import { useAuthentication } from '../Authentication/AuthenticationProvider';
 
 const SigninComponent = () => {
-  
-  const [user, setUser] = useState({});
-  const [csrfToken, setCsrfToken] = useState(localStorage.getItem("csrf_token") || "");
-  const [errorData, setErrorData] = useState({});
+  const { signinAction, errorData } = useAuthentication();
   const signinForm = signinFormValidation;
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -19,51 +15,10 @@ const SigninComponent = () => {
   
   const navigator = useNavigate();
 
-  // const onSubmit = async (data) => {
-  //   try {
-  //     const response = await axios
-  //       .post("http://localhost:8080/api/auth/signin", 
-  //         {
-  //           username: data.username,
-  //           password: data.password,
-  //         },
-  //       );
-        
-  //       console.log(response.headers.csrf_token);
-
-  //     navigator("/signup");
-  //   } catch (error) {
-  //     setErrorData(error.response.data);
-  //   }
-  // }
-
-  const onSubmit = async (data) => {
-    let response;
-    try {
-      response = await axios
-        .post("http://localhost:8080/api/auth/signin", 
-          {
-            username: data.username,
-            password: data.password,
-          }
-        );
-    } catch (error) {
-      setErrorData(error.response.data);
-    }
-
-    if (response.data) {
-      setUser(response.data);
-      console.log(user);
-      localStorage.setItem("csrf_token", response.headers.csrf_token);
-      navigator("/signup");
-      return;
-    }
-};
-
   return (
     <main className={styles.container}>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <p className={errorData.message ? styles["error", "signinError"]: styles.hidden}>{errorData.message}</p>
+      <form onSubmit={handleSubmit(signinAction)} noValidate>
+        <p className={errorData.current.message ? styles["error", "signinError"]: styles.hidden}>{errorData.current.message}</p>
         <div className={styles.formControl}>
           <div className={styles.formData}>
             <label htmlFor="username">
