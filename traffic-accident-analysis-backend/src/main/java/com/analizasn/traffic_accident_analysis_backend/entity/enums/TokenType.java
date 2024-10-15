@@ -3,7 +3,7 @@ package com.analizasn.traffic_accident_analysis_backend.entity.enums;
 public enum TokenType {
     REFRESH_TOKEN("refresh_token"),
     ACCESS_TOKEN("access_token"),
-    CSRF_TOKEN("csrf_token");
+    XSRF_TOKEN("xsrf_token");
 
     private final String tokenName;
 

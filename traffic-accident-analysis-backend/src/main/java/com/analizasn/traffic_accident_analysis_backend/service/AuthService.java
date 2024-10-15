@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public interface AuthService {
-    LoginResponseWithJwtCookies handleSignin(LoginRequest loginRequest);
+    LoginResponseWithJwtCookies handleSignin(LoginRequest loginRequest, HttpServletRequest httpServletRequest);
     void handleSignup(SignupRequest signupRequest);
     Optional<RefreshTokenResponse> handleRefreshToken(HttpServletRequest httpServletRequest);
     AccessAndRefreshTokenCookies handeSignout(HttpServletRequest httpServletRequest);

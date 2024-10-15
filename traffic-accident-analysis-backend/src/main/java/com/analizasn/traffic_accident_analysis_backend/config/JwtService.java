@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.antlr.v4.runtime.Token;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,7 @@ import org.springframework.web.util.WebUtils;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -56,7 +54,7 @@ public class JwtService {
 
     public String extractCsrfToken(String token) {
         final Claims claims = extractAllClaims(token);
-        return claims.get(TokenType.CSRF_TOKEN.getTokenName(), String.class);
+        return claims.get(TokenType.XSRF_TOKEN.getTokenName(), String.class);
     }
 
     private <T> T claimsResolver(String token, Function<Claims, T> claimsResolver) {
@@ -80,7 +78,7 @@ public class JwtService {
     public String generateTokenFromUsername(String username) {
         String csrfToken = generateCsrfToken();
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(TokenType.CSRF_TOKEN.getTokenName(), csrfToken);
+        extraClaims.put(TokenType.XSRF_TOKEN.getTokenName(), csrfToken);
         return buildToken(extraClaims, username, accessTokenexpirationTime);
     }
 
@@ -113,11 +111,11 @@ public class JwtService {
 
     public ResponseCookie generateCsrfTokenCookie(String token) {
         return ResponseCookie
-                .from(TokenType.CSRF_TOKEN.getTokenName(), token)
+                .from(TokenType.XSRF_TOKEN.getTokenName(), token)
                 .path("/api")
                 .maxAge(accessTokenexpirationTime / 1000)
                 .httpOnly(false)
-                .sameSite("strict")
+                .sameSite("lax")
                 .build();
     }
 
@@ -136,6 +134,7 @@ public class JwtService {
         return ResponseCookie
                 .from(jwtRefreshCookieName, null)
                 .path("/api/auth/refresh-token")
+                .sameSite("strict")
                 .httpOnly(true)
                 .build();
     }
@@ -188,8 +187,9 @@ public class JwtService {
         return getTokenFromCookie(httpServletRequest, jwtRefreshCookieName);
     }
 
-    public Optional<String> getCsrfTokenFromCookie(HttpServletRequest httpServletRequest) {
-        return getTokenFromCookie(httpServletRequest, TokenType.CSRF_TOKEN.getTokenName());
+    public Optional<String> getCsrfTokenFromHeader(HttpServletRequest httpServletRequest) {
+        String xsrfToken = httpServletRequest.getHeader(TokenType.XSRF_TOKEN.getTokenName());
+        return Optional.ofNullable(xsrfToken);
     }
 
     private Optional<String> getTokenFromCookie(HttpServletRequest httpServletRequest, String name) {

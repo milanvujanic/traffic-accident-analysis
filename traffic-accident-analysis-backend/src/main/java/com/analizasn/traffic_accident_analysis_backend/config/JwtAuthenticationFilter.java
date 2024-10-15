@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             final Optional<String> accessToken = jwtService.getAccessTokenFromCookie(request);
             if (accessToken.isPresent() && jwtService.validateJwtToken(accessToken.get())) {
-                final Optional<String> csrfToken = jwtService.getCsrfTokenFromCookie(request);
+                final Optional<String> csrfToken = jwtService.getCsrfTokenFromHeader(request);
                 final String username = jwtService.extractUsername(accessToken.get());
                 final String csrfTokenJwt = jwtService.extractCsrfToken(accessToken.get());
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

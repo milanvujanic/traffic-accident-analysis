@@ -27,12 +27,12 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest) {
-        LoginResponseWithJwtCookies response = authService.handleSignin(loginRequest);
+    public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+        LoginResponseWithJwtCookies response = authService.handleSignin(loginRequest, httpServletRequest);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, response.getRefreshTokenCookie().toString())
                 .header(HttpHeaders.SET_COOKIE, response.getAccessTokenCookie().toString())
-                .header(TokenType.CSRF_TOKEN.getTokenName(), response.getCsrfToken())
+                .header(TokenType.XSRF_TOKEN.getTokenName(), response.getCsrfToken())
                 .body(response.getLoginResponse());
     }
 
@@ -40,15 +40,6 @@ public class AuthController {
     public ResponseEntity<MessageResponse> signup(@RequestBody SignupRequest signupRequest) {
         authService.handleSignup(signupRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-    }
-
-    @PostMapping("/signout")
-    public ResponseEntity<MessageResponse> signout(HttpServletRequest httpServletRequest) {
-        AccessAndRefreshTokenCookies accessAndRefreshTokenCookies = authService.handeSignout(httpServletRequest);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, accessAndRefreshTokenCookies.getRefreshTokenCookie().toString())
-                .header(HttpHeaders.SET_COOKIE, accessAndRefreshTokenCookies.getAccessTokenCookie().toString())
-                .body(new MessageResponse("You have been signed out!"));
     }
 
     @PostMapping("/refresh-token")
