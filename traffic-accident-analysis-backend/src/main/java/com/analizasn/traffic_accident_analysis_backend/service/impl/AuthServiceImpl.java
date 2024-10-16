@@ -18,16 +18,14 @@ import com.analizasn.traffic_accident_analysis_backend.service.RefreshTokenServi
 import com.analizasn.traffic_accident_analysis_backend.service.RoleService;
 import com.analizasn.traffic_accident_analysis_backend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -58,10 +56,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponseWithJwtCookies handleSignin(LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-        token.setDetails(new WebAuthenticationDetails(httpServletRequest));
-        Authentication authentication = authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         User user = userService.findByUsername(loginRequest.getUsername());
 
@@ -156,11 +158,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AccessAndRefreshTokenCookies handeSignout(HttpServletRequest httpServletRequest) {
-        org.springframework.security.core.userdetails.User userDetails =
-                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<String> refreshToken = jwtService.getRefreshTokenFromCookie(httpServletRequest);
-
-        refreshToken.ifPresent(refToken -> processSignout(refToken, userDetails));
+        if (refreshToken.isPresent()) {
+            String username = jwtService.extractUsername(refreshToken.get());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            processSignout(refreshToken.get(), userDetails);
+        }
 
         ResponseCookie accessTokenCookie = jwtService.getCleanAccessTokenCookie();
         ResponseCookie refreshTokenCookie = jwtService.getCleanRefreshTokenCookie();

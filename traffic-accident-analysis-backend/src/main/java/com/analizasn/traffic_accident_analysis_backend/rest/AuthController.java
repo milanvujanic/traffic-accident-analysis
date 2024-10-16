@@ -42,6 +42,15 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+    @PostMapping("/signout")
+    public ResponseEntity<MessageResponse> signout(HttpServletRequest httpServletRequest) {
+        AccessAndRefreshTokenCookies accessAndRefreshTokenCookies = authService.handeSignout(httpServletRequest);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, accessAndRefreshTokenCookies.getRefreshTokenCookie().toString())
+                .header(HttpHeaders.SET_COOKIE, accessAndRefreshTokenCookies.getAccessTokenCookie().toString())
+                .body(new MessageResponse("You have been signed out!"));
+    }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<MessageResponse> refreshToken(HttpServletRequest httpServletRequest) {
         Optional<RefreshTokenResponse> refreshTokenResponse = authService.handleRefreshToken(httpServletRequest);
