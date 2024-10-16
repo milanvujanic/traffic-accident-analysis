@@ -1,10 +1,10 @@
 import styles from './SignupComponent.module.css'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import signupFormValidation from './SignupComponentValidation';
 import { useState } from 'react'
+import axiosConfig from '../../Util/AxiosConfig';
 
 const SignupComponent = () => {
 
@@ -19,8 +19,8 @@ const SignupComponent = () => {
 
   const hanldeSignup = async (data) => {
     try { 
-      await axios
-        .post("http://localhost:8080/api/auth/signup", 
+      await axiosConfig
+        .post("/auth/signup", 
           {
             username: data.username,
             email: data.email,
@@ -31,8 +31,8 @@ const SignupComponent = () => {
 
       navigator("/");
     } catch(error) {
-      setErrorData(error.response.data);
-      setErrorFieldFocus(error.response.data.message);
+        setErrorData(error.response.data);
+        setErrorFieldFocus(error.response.data.message);
     }
   }
 

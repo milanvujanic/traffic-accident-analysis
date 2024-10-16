@@ -5,9 +5,6 @@ import SigninComponent from './components/SigninComponent/SigninComponent'
 import SignupComponent from './components/SignupComponent/SignupComponent'
 import HomeComponent from './components/HomeComponent/HomeComponent'
 import SignoutComponent from './components/SignoutComponent/SignoutComponent'
-import axios from 'axios';
-
-axios.defaults.withCredentials = true;
 
 function App() {
   return (

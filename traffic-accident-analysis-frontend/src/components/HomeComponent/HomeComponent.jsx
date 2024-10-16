@@ -1,6 +1,6 @@
-import axios from "axios"
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axiosConfig from "../../Util/AxiosConfig";
 
 const HomeComponent = () => {
 
@@ -12,15 +12,10 @@ const HomeComponent = () => {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-          const response = await axios
-          .post("http://localhost:8080/api/home", {},
+        const response = await axiosConfig
+        .post("/home", {},
           {
             signal: controller.signal,
-            withCredentials: true,
-            headers: {
-              "xsrf_token": localStorage.getItem("xsrf_token"),
-              "Content-Type": "application/json",
-            },
           },
         );
 

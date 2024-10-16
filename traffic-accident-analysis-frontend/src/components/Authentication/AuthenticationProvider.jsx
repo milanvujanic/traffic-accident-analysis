@@ -1,7 +1,7 @@
 import { useContext, createContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import PropTypes from 'prop-types';
+import axiosConfig from '../../Util/AxiosConfig';
 
 const AuthenticationContext = createContext();
 
@@ -21,8 +21,8 @@ const AuthenticationProvider = ({ children }) => {
 
     const signinAction = async (data) => {
         try {
-          const response = await axios
-            .post("http://localhost:8080/api/auth/signin", 
+          const response = await axiosConfig
+            .post("/auth/signin", 
               {
                 username: data.username,
                 password: data.password,
@@ -47,16 +47,9 @@ const AuthenticationProvider = ({ children }) => {
 
     const signoutAction = async () => {
       try {
-        const response = await axios
-          .post("http://localhost:8080/api/auth/signout", {},
-            {
-              withCredentials: true,
-              headers: {
-                "xsrf_token": localStorage.getItem("xsrf_token"),
-                "Content-Type": "application/json",
-              }
-            });
-        console.log(response.data);
+        const response = await axiosConfig
+          .post("/auth/signout");
+        
         if (response.data 
             && response.data.message === "You have been signed out!") {
           currentUser = null;
@@ -64,9 +57,9 @@ const AuthenticationProvider = ({ children }) => {
           currentCsrfToken = "";
           setCsrfToken(currentCsrfToken);
           localStorage.removeItem("xsrf_token");
-          console.log(localStorage.getItem("xsrf_token"));
           navigate("/");
         }
+
       } catch(error) {
           currentErrorData = error.response.data;
           setErrorData(currentErrorData);
