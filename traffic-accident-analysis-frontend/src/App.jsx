@@ -4,6 +4,7 @@ import AuthenticationProvider from './components/Authentication/AuthenticationPr
 import SigninComponent from './components/SigninComponent/SigninComponent'
 import SignupComponent from './components/SignupComponent/SignupComponent'
 import HomeComponent from './components/HomeComponent/HomeComponent'
+import SignoutComponent from './components/SignoutComponent/SignoutComponent'
 import axios from 'axios';
 
 axios.defaults.withCredentials = true;
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<SigninComponent />} />
           <Route path="/signup" element={<SignupComponent />} />
           <Route path="/home" element={<PrivateRoute Component={HomeComponent}/>} />
+          <Route path="/signout" element={<PrivateRoute Component={SignoutComponent}/>} />
         </Routes>
       </AuthenticationProvider>
     </Router>

@@ -6,7 +6,7 @@ import signinFormValidation from './SigninComponentValidation';
 import { useAuthentication } from '../Authentication/AuthenticationProvider';
 
 const SigninComponent = () => {
-  const { signinAction, errorData } = useAuthentication();
+  const { signinAction, currentErrorData } = useAuthentication();
   const signinForm = signinFormValidation;
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -18,7 +18,7 @@ const SigninComponent = () => {
   return (
     <main className={styles.container}>
       <form onSubmit={handleSubmit(signinAction)} noValidate>
-        <p className={errorData.current.message ? styles["error", "signinError"]: styles.hidden}>{errorData.current.message}</p>
+        <p className={currentErrorData.message ? styles["error", "signinError"]: styles.hidden}>{currentErrorData.message}</p>
         <div className={styles.formControl}>
           <div className={styles.formData}>
             <label htmlFor="username">

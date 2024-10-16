@@ -1,11 +1,11 @@
-import { useAuthentication } from './AuthenticationProvider'
 import { Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types';
+import { useAuthentication } from './AuthenticationProvider';
 
 const PrivateRoute = ({ Component }) => {
-  const { csrf_token } = useAuthentication();
+  const { currentCsrfToken } = useAuthentication();
 
-  if (!csrf_token.current) {
+  if (!currentCsrfToken) {
     return <Navigate to="/" />;
   }
 

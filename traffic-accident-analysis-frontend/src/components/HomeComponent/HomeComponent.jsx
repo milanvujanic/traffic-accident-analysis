@@ -1,41 +1,50 @@
 import axios from "axios"
-import { useRef, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const HomeComponent = () => {
 
-  const message = useRef("");
-  const [error, setError] = useState("");
-
-  const fetchData = async () => {
-    try {
-       const response = await axios
-            .post("http://localhost:8080/api/home", {}, 
-            {
-              withCredentials: true,
-              headers: {
-                "xsrf_token": localStorage.getItem("xsrf_token"),
-                "Content-Type": "application/json",
-              },
-            },
-          );
-
-          if (response.data) {
-            message.current = response.data.message;
-            console.log("messsage.current: " + message.current);
-          }
-
-        } catch (error) {
-          setError(error.response.data.message);
-        }
-  }
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+          const response = await axios
+          .post("http://localhost:8080/api/home", {},
+          {
+            signal: controller.signal,
+            withCredentials: true,
+            headers: {
+              "xsrf_token": localStorage.getItem("xsrf_token"),
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        if (response.data) {
+          setMessage(response.data.message);
+        }
+
+      } catch (error) {
+        if (error.response) {
+          setError(error.response.data);
+        }
+      }
+    }
     fetchData();
-  }, [message]);
+
+    return () => {
+      controller.abort();
+    }
+  }, []);
 
   return (
     <div>
-        {message.current}
+        {message ? message : error.message}
+        <button onClick={() => navigate("/signout")}>Go to signout...</button>
     </div>
   )
 }
