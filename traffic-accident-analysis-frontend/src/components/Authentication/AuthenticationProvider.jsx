@@ -35,7 +35,7 @@ const AuthenticationProvider = ({ children }) => {
             currentCsrfToken = response.headers.get("xsrf_token");
             setCsrfToken(currentCsrfToken);
             localStorage.setItem("xsrf_token", currentCsrfToken);
-            navigate("/home");
+            navigate("/signout");
             return;
           }
     

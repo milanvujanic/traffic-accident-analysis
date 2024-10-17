@@ -24,4 +24,29 @@ axiosConfig.interceptors.request.use(
     }
 );
 
+axiosConfig.interceptors.response.use(
+    response => {
+        console.log(response);
+        return response;
+    },
+    async error => {
+        if (excludedEndpoints.some(endpoint => error.config.url.includes(endpoint))) {
+            return error;
+        }
+
+        const originalRequest = error.config;
+        console.log("Error: " + error.response.data);
+        if (error.response.data.statusCode === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            const res = await axiosConfig.post("/auth/refresh-token");
+            if (res.data) {
+                let refreshedCrsfToken = res.headers.get("xsrf_token");
+                localStorage.setItem("xsrf_token", refreshedCrsfToken);
+                return axiosConfig(originalRequest);
+            }
+            return Promise.reject(error);
+        }
+    }
+);
+
 export default axiosConfig;

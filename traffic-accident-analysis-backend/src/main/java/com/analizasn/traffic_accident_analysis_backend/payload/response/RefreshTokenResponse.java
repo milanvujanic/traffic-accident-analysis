@@ -8,5 +8,5 @@ import org.springframework.http.ResponseCookie;
 @AllArgsConstructor
 public class RefreshTokenResponse {
     private final ResponseCookie accessTokenCookie;
-    private final ResponseCookie csrfTokenCookie;
+    private final String csrfToken;
 }

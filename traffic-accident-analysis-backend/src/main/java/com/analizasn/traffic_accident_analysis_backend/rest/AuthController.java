@@ -57,7 +57,7 @@ public class AuthController {
         if (refreshTokenResponse.isPresent()) {
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, refreshTokenResponse.get().getAccessTokenCookie().toString())
-                    .header(HttpHeaders.SET_COOKIE, refreshTokenResponse.get().getCsrfTokenCookie().toString())
+                    .header(TokenType.XSRF_TOKEN.getTokenName(), refreshTokenResponse.get().getCsrfToken())
                     .body(new MessageResponse("Token is refreshed successfully!"));
         }
 

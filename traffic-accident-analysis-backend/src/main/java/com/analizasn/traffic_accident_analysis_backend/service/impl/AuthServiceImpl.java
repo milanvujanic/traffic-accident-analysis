@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
             String csrfToken = jwtService.extractCsrfToken(accessToken);
             return Optional.of(new RefreshTokenResponse(
                     jwtService.generateAccessTokenCookie(accessToken),
-                    jwtService.generateCsrfTokenCookie(csrfToken)));
+                    csrfToken));
         }
 
         return Optional.empty();
