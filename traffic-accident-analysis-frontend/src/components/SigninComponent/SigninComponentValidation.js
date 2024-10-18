@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+const usernameRegex = new RegExp(/^\w{3,}$/);
 const passwordRegex = new RegExp(
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{8,30}$/
 );
@@ -7,7 +8,13 @@ const passwordRegex = new RegExp(
 const signinFormValidation = z.object({
   username: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters" }),
+    .min(3, {
+      message: "Username must contain at least 3 characters",
+    })
+    .regex(usernameRegex, {
+      message:
+        "Allowed characters: letters, digits and underscore",
+    }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })

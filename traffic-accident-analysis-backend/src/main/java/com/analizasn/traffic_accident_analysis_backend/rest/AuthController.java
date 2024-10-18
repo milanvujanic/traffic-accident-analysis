@@ -7,6 +7,7 @@ import com.analizasn.traffic_accident_analysis_backend.payload.request.SignupReq
 import com.analizasn.traffic_accident_analysis_backend.payload.response.*;
 import com.analizasn.traffic_accident_analysis_backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<MessageResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
         authService.handleSignup(signupRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

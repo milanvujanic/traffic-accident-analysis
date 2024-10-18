@@ -114,7 +114,7 @@ public class JwtService {
                 .path("/api")
                 .maxAge(accessTokenexpirationTime / 1000)
                 .httpOnly(false)
-                .sameSite("lax")
+                .sameSite("strict")
                 .build();
     }
 

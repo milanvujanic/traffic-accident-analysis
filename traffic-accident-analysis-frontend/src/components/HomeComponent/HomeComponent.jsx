@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosConfig from "../../util/AxiosConfig/AxiosConfig";
 import { PathConstants } from "../../constants/PathConstants";
+import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
 
 const HomeComponent = () => {
   const [message, setMessage] = useState("");
-  const [error, setError] = useState({});
+  const [errorMessage, setErrorMessage] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +25,7 @@ const HomeComponent = () => {
           setMessage(response.data.message);
         }
       } catch (error) {
-        if (error.response) {
-          setError(error.response.data);
-        }
+        setErrorMessage(parseErrorMessage(error));
       }
     };
     fetchData();
@@ -38,8 +37,18 @@ const HomeComponent = () => {
 
   return (
     <div>
-      {message ? message : error.message}
-      <button onClick={() => navigate(PathConstants.SIGNOUT)}>Go to signout...</button>
+      {
+        message 
+        ? message
+        : errorMessage
+        ? errorMessage.map(data => (
+          <p key={data}>{data}</p>
+        ))
+        : ""
+      }
+      <button onClick={() => navigate(PathConstants.SIGNOUT)}>
+        Go to signout...
+      </button>
     </div>
   );
 };

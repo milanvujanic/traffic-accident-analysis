@@ -1,5 +1,7 @@
 package com.analizasn.traffic_accident_analysis_backend.exception;
 
-public record ExceptionDto(String message, int statusCode) {
+import java.util.List;
+
+public record ExceptionDto(List<String> message, int statusCode) {
 
 }

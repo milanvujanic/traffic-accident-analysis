@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import axiosConfig from "../../util/AxiosConfig/AxiosConfig";
 import { ApiConstants } from "../../constants/ApiConstants";
 import { PathConstants } from "../../constants/PathConstants";
-import { HeaderNameConstants } from "../../constants/HeaderConstants";
+import { HeaderNameConstants } from "../../constants/HttpConstants";
 import { LocalStorageConstants } from "../../constants/LocalStorageConstants";
+import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
 
 const AuthenticationContext = createContext();
 
@@ -16,7 +17,7 @@ const AuthenticationProvider = ({ children }) => {
   const [csrfToken, setCsrfToken] = useState(
     localStorage.getItem(LocalStorageConstants.XSRF_TOKEN) || ""
   );
-  const [errorData, setErrorData] = useState({});
+  const [errorMessage, setErrorMessage] = useState([]);
 
   const navigate = useNavigate();
 
@@ -33,11 +34,12 @@ const AuthenticationProvider = ({ children }) => {
         const currentCsrfToken = response.headers.get(HeaderNameConstants.XSRF_TOKEN);
         setCsrfToken(currentCsrfToken);
         localStorage.setItem(LocalStorageConstants.XSRF_TOKEN, currentCsrfToken);
+        setErrorMessage([]);
         navigate(PathConstants.SIGNOUT);
         return;
       }
     } catch (error) {
-      setErrorData(error.response.data);
+      setErrorMessage(parseErrorMessage(error));
     }
   };
 
@@ -54,10 +56,11 @@ const AuthenticationProvider = ({ children }) => {
         const currentCsrfToken = "";
         setCsrfToken(currentCsrfToken);
         localStorage.removeItem(LocalStorageConstants.XSRF_TOKEN);
+        setErrorMessage([]);
         navigate(PathConstants.SIGNIN);
       }
     } catch (error) {
-      setErrorData(error.response.data);
+      setErrorMessage(parseErrorMessage(error));
     }
   };
 
@@ -68,7 +71,7 @@ const AuthenticationProvider = ({ children }) => {
         user,
         signinAction,
         signoutAction,
-        errorData,
+        errorMessage,
       }}
     >
       {children}

@@ -7,7 +7,7 @@ import { useAuthentication } from "../Authentication/AuthenticationProvider";
 import { PathConstants } from "../../constants/PathConstants";
 
 const SigninComponent = () => {
-  const { signinAction, errorData } = useAuthentication();
+  const { signinAction, errorMessage } = useAuthentication();
   const signinForm = signinFormValidation;
 
   const {
@@ -23,15 +23,18 @@ const SigninComponent = () => {
   return (
     <main className={styles.container}>
       <form onSubmit={handleSubmit(signinAction)} noValidate>
-        <p
-          className={
-            errorData.message
-              ? styles[("error", "signinError")]
-              : styles.hidden
-          }
-        >
-          {errorData.message}
-        </p>
+        {errorMessage.map((data) => (
+          <p
+            key={data}
+            className={
+              errorMessage
+                ? styles[("error", "signinError")]
+                : styles.hidden
+            }
+          >
+            {errorMessage}
+          </p>
+        ))}
         <div className={styles.formControl}>
           <div className={styles.formData}>
             <label htmlFor="username">

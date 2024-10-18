@@ -1,7 +1,8 @@
 import axios from "axios";
 import { ApiConstants } from "../../constants/ApiConstants";
-import { HeaderNameConstants } from "../../constants/HeaderConstants";
+import { HeaderNameConstants } from "../../constants/HttpConstants";
 import { LocalStorageConstants } from "../../constants/LocalStorageConstants";
+import { ErrorConstants } from "../../constants/ErrorConstants";
 
 const axiosConfig = axios.create({
   baseURL: ApiConstants.BASE_URL,
@@ -19,7 +20,9 @@ axiosConfig.interceptors.request.use(
       return config;
     }
 
-    config.headers[HeaderNameConstants.XSRF_TOKEN] = localStorage.getItem(LocalStorageConstants.XSRF_TOKEN);
+    config.headers[HeaderNameConstants.XSRF_TOKEN] = localStorage.getItem(
+      LocalStorageConstants.XSRF_TOKEN
+    );
     return config;
   },
   (error) => {
@@ -39,12 +42,20 @@ axiosConfig.interceptors.response.use(
     }
 
     const originalRequest = error.config;
-    if (error.response.data.statusCode === 401 && !originalRequest._retry) {
+    if (
+      error.response.data.statusCode === ErrorConstants.CODE_401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
       const res = await axiosConfig.post(ApiConstants.REFRESH_TOKEN);
       if (res.data) {
-        let refreshedCrsfToken = res.headers.get(HeaderNameConstants.XSRF_TOKEN);
-        localStorage.setItem(LocalStorageConstants.XSRF_TOKEN, refreshedCrsfToken);
+        let refreshedCrsfToken = res.headers.get(
+          HeaderNameConstants.XSRF_TOKEN
+        );
+        localStorage.setItem(
+          LocalStorageConstants.XSRF_TOKEN,
+          refreshedCrsfToken
+        );
         return axiosConfig(originalRequest);
       }
       return Promise.reject(error);

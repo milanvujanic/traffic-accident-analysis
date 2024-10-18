@@ -7,9 +7,10 @@ import { useState } from "react";
 import axiosConfig from "../../util/AxiosConfig/AxiosConfig";
 import { ApiConstants } from "../../constants/ApiConstants";
 import { PathConstants } from "../../constants/PathConstants";
+import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
 
 const SignupComponent = () => {
-  const [errorData, setErrorData] = useState({});
+  const [errorMessage, setErrorMessage] = useState([]);
   const signupForm = signupFormValidation;
 
   const {
@@ -33,7 +34,7 @@ const SignupComponent = () => {
 
       navigator(PathConstants.SIGNIN);
     } catch (error) {
-      setErrorData(error.response.data);
+      setErrorMessage(parseErrorMessage(error));
       setErrorFieldFocus(error.response.data.message);
     }
   };
@@ -49,13 +50,16 @@ const SignupComponent = () => {
   return (
     <main className={styles.container}>
       <form onSubmit={handleSubmit(hanldeSignup)}>
-        <p
-          className={
-            errorData.message ? styles[("error", "signinError")] : styles.hidden
-          }
-        >
-          {errorData.message}
-        </p>
+        {errorMessage.map((data) => (
+          <p
+            key={data}
+            className={
+              errorMessage ? styles[("error", "signinError")] : styles.hidden
+            }
+          >
+            {data}
+          </p>
+        ))}
         <div className={styles.formControl}>
           <div className={styles.formData}>
             <label htmlFor="username">
@@ -126,7 +130,8 @@ const SignupComponent = () => {
 
         <button type="submit">Sign up</button>
         <p>
-          Already have an account? <a onClick={() => navigator(PathConstants.SIGNIN)}>Sign in</a>
+          Already have an account?{" "}
+          <a onClick={() => navigator(PathConstants.SIGNIN)}>Sign in</a>
         </p>
       </form>
     </main>
