@@ -1,21 +1,20 @@
-import { Navigate } from 'react-router-dom'
-import PropTypes from 'prop-types';
-import { useAuthentication } from './AuthenticationProvider';
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useAuthentication } from "./AuthenticationProvider";
+import { PathConstants } from "../../constants/PathConstants";
 
 const PrivateRoute = ({ Component }) => {
-  const { currentCsrfToken } = useAuthentication();
+  const { csrfToken } = useAuthentication();
 
-  if (!currentCsrfToken) {
-    return <Navigate to="/" />;
+  if (!csrfToken) {
+    return <Navigate to={PathConstants.SIGNIN} />;
   }
 
-  return (
-    <Component />
-  )
-}
+  return <Component />;
+};
 
 PrivateRoute.propTypes = {
   Component: PropTypes.func.isRequired,
-}
+};
 
 export default PrivateRoute;
