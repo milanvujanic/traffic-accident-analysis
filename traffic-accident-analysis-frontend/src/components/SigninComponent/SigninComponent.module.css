@@ -4,9 +4,20 @@
   box-sizing: border-box;
 }
 
+:root {
+  --main-bg-color-light: #338d9c;
+  --main-bg-color-dark: #21282b;
+  
+  --form-bg-color: #365359;
+  --form-text-error-color: #ff9328;
+  --form-bg-error-color: #fe252566;
+  --form-label-text-color: #555b6d;
+  --form-label-bg-color: #232529;
+}
+
 .container {
-  background: -webkit-linear-gradient(to bottom, #0c8da4, #3a6073);
-  background: linear-gradient(to bottom, #338d9c, #21282b);
+  background: -webkit-linear-gradient(to bottom, var(--main-bg-color-light), var(--main-bg-color-dark));
+  background: linear-gradient(to bottom, var(--main-bg-color-light), var(--main-bg-color-dark));
   font-family: Roboto, sans-serif;
   display: flex;
   flex-direction: column;
@@ -26,8 +37,8 @@
   gap: 2rem;
   padding: 3rem;
   padding-bottom: 1rem;
-  border: 1px solid #365359;
-  background-color: #365359;
+  border: 1px solid var(--form-bg-color);
+  background-color: var(--form-bg-color);
   border-radius: 5px;
 }
 
@@ -41,16 +52,16 @@
 .container form .formControl .error,
 .container form .error {
   display: block;
-  color: rgb(255, 147, 40);
+  color: var(--form-text-error-color);
   text-align: left;
   font-size: 1rem;
 }
 
 .container form .signinError {
-  color: rgba(255, 147, 40);
+  color: var(--form-text-error-color);
   font-weight: bold;
   font-size: 1.3rem;
-  background-color: rgba(254, 37, 37, 0.4);
+  background-color: var(--form-bg-error-color);
   padding: 15px;
 }
 
@@ -72,8 +83,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #555b6d;
-  background-color: #232529;
+  color: var(--form-label-text-color);
+  background-color: var(--form-label-bg-color);
 }
 
 .container .formData input {

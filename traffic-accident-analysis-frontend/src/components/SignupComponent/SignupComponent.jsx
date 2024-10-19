@@ -3,17 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import signupFormValidation from "./SignupComponentValidation";
-import { useState } from "react";
-import axiosConfig from "../../util/AxiosConfig/AxiosConfig";
-import { ApiConstants } from "../../constants/ApiConstants";
 import { PathConstants } from "../../constants/PathConstants";
-import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
 import FormInput from "../Reusable/Input/FormInput";
-
+import SignupComponentUtil from "./SignupComponentUtil";
 const SignupComponent = () => {
-  const [errorMessage, setErrorMessage] = useState([]);
   const signupForm = signupFormValidation;
-
+  const { errorMessage, hanldeSignup } = SignupComponentUtil();
   const {
     register,
     handleSubmit,
@@ -23,34 +18,6 @@ const SignupComponent = () => {
   });
 
   const navigator = useNavigate();
-
-  const hanldeSignup = async (data) => {
-    try {
-      await axiosConfig.post(ApiConstants.SIGNUP, {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        roles: [],
-      });
-
-      navigator(PathConstants.SIGNIN);
-    } catch (error) {
-      setErrorMessage(parseErrorMessage(error));
-      setErrorFieldFocus(error.response.data.message);
-    }
-  };
-
-  const setErrorFieldFocus = (errorMessage) => {
-    if (errorMessage.includes("Username")) {
-      document.getElementById("username").focus();
-    } else if (errorMessage.includes("Email")) {
-      document.getElementById("email").focus();
-    } else if (errorMessage.includes("Password")) {
-      document.getElementById("password").focus();
-    } else if (errorMessage.includes("Passwords")) {
-      document.getElementById("confirmPassword").focus();
-    }
-  };
 
   return (
     <main className={styles.container}>

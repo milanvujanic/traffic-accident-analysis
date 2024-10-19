@@ -8,7 +8,7 @@ export const parseErrorMessage = (error) => {
     const statusCode = error.response.data.statusCode;
     const errorMessagePayload = error.response.data.message;
 
-    if (statusCode === ErrorConstants.CODE_400) {
+    if (statusCode === ErrorConstants.CODE_401) {
       return [...errorMessagePayload];
     }
 
