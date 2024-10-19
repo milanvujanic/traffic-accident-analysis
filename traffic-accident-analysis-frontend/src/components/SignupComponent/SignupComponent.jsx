@@ -72,7 +72,7 @@ const SignupComponent = () => {
           placeholder="Username"
           register={register("username")}
           errors={errors.username}
-          styles={{ ...styles }}
+          styles={styles}
         />
 
         <FormInput
@@ -81,7 +81,7 @@ const SignupComponent = () => {
           placeholder="Email"
           register={register("email")}
           errors={errors.email}
-          styles={{ ...styles }}
+          styles={styles}
         />
 
         <FormInput
@@ -91,7 +91,7 @@ const SignupComponent = () => {
           placeholder="Password"
           register={register("password")}
           errors={errors.password}
-          styles={{ ...styles }}
+          styles={styles}
         />
 
         <FormInput
@@ -101,7 +101,7 @@ const SignupComponent = () => {
           placeholder="Confirm password"
           register={register("confirmPassword")}
           errors={errors.confirmPassword}
-          styles={{ ...styles }}
+          styles={styles}
         />
 
         <button type="submit">Sign up</button>

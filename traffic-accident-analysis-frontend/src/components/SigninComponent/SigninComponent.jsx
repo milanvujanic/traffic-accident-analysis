@@ -41,7 +41,7 @@ const SigninComponent = () => {
           placeholder="Username"
           register={register("username")}
           errors={errors.username}
-          styles={{...styles}}
+          styles={styles}
         />
 
         <FormInput
@@ -51,7 +51,7 @@ const SigninComponent = () => {
           placeholder="Password"
           register={register("password")}
           errors={errors.password}
-          styles={{...styles}}
+          styles={styles}
         />
 
         <button type="submit">Sign in</button>
