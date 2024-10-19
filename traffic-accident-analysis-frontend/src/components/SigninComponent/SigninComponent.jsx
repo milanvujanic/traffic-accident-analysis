@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import signinFormValidation from "./SigninComponentValidation";
 import { useAuthentication } from "../Authentication/AuthenticationProvider";
 import { PathConstants } from "../../constants/PathConstants";
+import FormInput from "../Reusable/Input/FormInput";
 
 const SigninComponent = () => {
   const { signinAction, errorMessage } = useAuthentication();
@@ -27,47 +28,31 @@ const SigninComponent = () => {
           <p
             key={data}
             className={
-              errorMessage
-                ? styles[("error", "signinError")]
-                : styles.hidden
+              errorMessage ? styles[("error", "signinError")] : styles.hidden
             }
           >
             {errorMessage}
           </p>
         ))}
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="username">
-              <i className="fa-solid fa-user"></i>
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="Username"
-              {...register("username")}
-            />
-          </div>
-          <p className={errors.username ? styles.error : styles.hidden}>
-            * {errors.username?.message}
-          </p>
-        </div>
 
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="password">
-              <i className="fa-solid fa-lock"></i>
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              {...register("password")}
-            />
-          </div>
-          <p className={errors.password ? styles.error : styles.hidden}>
-            * {errors.password?.message}
-          </p>
-        </div>
+        <FormInput
+          id="username"
+          icon={<i className="fa-solid fa-user"></i>}
+          placeholder="Username"
+          register={register("username")}
+          errors={errors.username}
+          styles={{...styles}}
+        />
+
+        <FormInput
+          type="password"
+          id="password"
+          icon={<i className="fa-solid fa-lock"></i>}
+          placeholder="Password"
+          register={register("password")}
+          errors={errors.password}
+          styles={{...styles}}
+        />
 
         <button type="submit">Sign in</button>
         <p>

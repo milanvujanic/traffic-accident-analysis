@@ -8,6 +8,7 @@ import axiosConfig from "../../util/AxiosConfig/AxiosConfig";
 import { ApiConstants } from "../../constants/ApiConstants";
 import { PathConstants } from "../../constants/PathConstants";
 import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
+import FormInput from "../Reusable/Input/FormInput";
 
 const SignupComponent = () => {
   const [errorMessage, setErrorMessage] = useState([]);
@@ -44,6 +45,10 @@ const SignupComponent = () => {
       document.getElementById("username").focus();
     } else if (errorMessage.includes("Email")) {
       document.getElementById("email").focus();
+    } else if (errorMessage.includes("Password")) {
+      document.getElementById("password").focus();
+    } else if (errorMessage.includes("Passwords")) {
+      document.getElementById("confirmPassword").focus();
     }
   };
 
@@ -60,73 +65,44 @@ const SignupComponent = () => {
             {data}
           </p>
         ))}
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="username">
-              <i className="fa-solid fa-user"></i>
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="Username"
-              {...register("username")}
-            />
-          </div>
-          <p className={errors.username ? styles.error : styles.hidden}>
-            * {errors.username?.message}
-          </p>
-        </div>
 
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="email">
-              <i className="fa-solid fa-envelope"></i>
-            </label>
-            <input
-              type="text"
-              id="email"
-              placeholder="Email"
-              {...register("email")}
-            />
-          </div>
-          <p className={errors.email ? styles.error : styles.hidden}>
-            * {errors.email?.message}
-          </p>
-        </div>
+        <FormInput
+          id="username"
+          icon={<i className="fa-solid fa-user"></i>}
+          placeholder="Username"
+          register={register("username")}
+          errors={errors.username}
+          styles={{ ...styles }}
+        />
 
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="password">
-              <i className="fa-solid fa-lock"></i>
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              {...register("password")}
-            />
-          </div>
-          <p className={errors.password ? styles.error : styles.hidden}>
-            * {errors.password?.message}
-          </p>
-        </div>
+        <FormInput
+          id="email"
+          icon={<i className="fa-solid fa-envelope"></i>}
+          placeholder="Email"
+          register={register("email")}
+          errors={errors.email}
+          styles={{ ...styles }}
+        />
 
-        <div className={styles.formControl}>
-          <div className={styles.formData}>
-            <label htmlFor="confirmPassword">
-              <i className="fa-solid fa-lock"></i>
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="Confirm password"
-              {...register("confirmPassword")}
-            />
-          </div>
-          <p className={errors.confirmPassword ? styles.error : styles.hidden}>
-            * {errors.confirmPassword?.message}
-          </p>
-        </div>
+        <FormInput
+          type="password"
+          id="password"
+          icon={<i className="fa-solid fa-lock"></i>}
+          placeholder="Password"
+          register={register("password")}
+          errors={errors.password}
+          styles={{ ...styles }}
+        />
+
+        <FormInput
+          type="password"
+          id="confirmPassword"
+          icon={<i className="fa-solid fa-lock"></i>}
+          placeholder="Confirm password"
+          register={register("confirmPassword")}
+          errors={errors.confirmPassword}
+          styles={{ ...styles }}
+        />
 
         <button type="submit">Sign up</button>
         <p>
