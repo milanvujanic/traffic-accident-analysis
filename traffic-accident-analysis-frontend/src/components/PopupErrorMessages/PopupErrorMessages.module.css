@@ -1,0 +1,61 @@
+@import url("../../Global.module.css");
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 50%;
+  min-width: 300px;
+  max-width: 800px;
+  background-color: var(--form-bg-error-color);
+  color: var(--form-text-error-color);
+  gap: 15px;
+  padding: 10px 15px;
+}
+
+.wrapper i {
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.wrapper i:hover {
+  color: #fccb04;
+}
+
+.wrapper .errorContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper .errorProperty {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--form-text-error-color);
+}
+
+.wrapper .errorText {
+  font-size: 1rem;
+  color: var(--form-text-error-color);
+  padding-left: 20px;
+}
+
+.noLeftPadding {
+  padding-left: 0px;
+}
+
+.error {
+  display: block;
+  color: var(--form-text-error-color);
+  font-size: 1rem;
+}
+
+.signinError {
+  padding: 15px;
+}
+
+.hidden {
+  display: none;
+}

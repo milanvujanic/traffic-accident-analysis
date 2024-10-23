@@ -1,0 +1,47 @@
+@import url("../../Global.module.css");
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 50%;
+  min-width: 300px;
+  max-width: 800px;
+  background-color: #16ff4ca2;
+  color: #114d4d;
+  gap: 15px;
+  padding: 10px 15px;
+}
+
+.wrapper i {
+  display: block;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.wrapper i:hover {
+  color: #f7f9fc;
+}
+
+.wrapper .successContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper .successText {
+  font-size: 1rem;
+  color: #365359;
+  font-weight: bold;
+}
+
+.success {
+  display: block;
+  color: var(--form-text-error-color);
+  font-size: 1rem;
+}
+
+.hidden {
+  display: none;
+}

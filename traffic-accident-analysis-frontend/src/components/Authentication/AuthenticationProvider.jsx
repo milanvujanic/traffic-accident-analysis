@@ -11,13 +11,12 @@ import { parseErrorMessage } from "../../util/ErrorMessage/ErrorMessage";
 const AuthenticationContext = createContext();
 
 const AuthenticationProvider = ({ children }) => {
-  console.log("Rendering AuthienticationProvider...");
 
   const [user, setUser] = useState(null);
   const [csrfToken, setCsrfToken] = useState(
     localStorage.getItem(LocalStorageConstants.XSRF_TOKEN) || ""
   );
-  const [errorMessage, setErrorMessage] = useState([]);
+  const [errorMessages, setErrorMessages] = useState(new Map());
 
   const navigate = useNavigate();
 
@@ -34,12 +33,12 @@ const AuthenticationProvider = ({ children }) => {
         const currentCsrfToken = response.headers.get(HeaderNameConstants.XSRF_TOKEN);
         setCsrfToken(currentCsrfToken);
         localStorage.setItem(LocalStorageConstants.XSRF_TOKEN, currentCsrfToken);
-        setErrorMessage([]);
+        setErrorMessages([]);
         navigate(PathConstants.SIGNOUT);
         return;
       }
     } catch (error) {
-      setErrorMessage(parseErrorMessage(error));
+      setErrorMessages(parseErrorMessage(error));
     }
   };
 
@@ -56,11 +55,11 @@ const AuthenticationProvider = ({ children }) => {
         const currentCsrfToken = "";
         setCsrfToken(currentCsrfToken);
         localStorage.removeItem(LocalStorageConstants.XSRF_TOKEN);
-        setErrorMessage([]);
+        setErrorMessages([]);
         navigate(PathConstants.SIGNIN);
       }
     } catch (error) {
-      setErrorMessage(parseErrorMessage(error));
+      setErrorMessages(parseErrorMessage(error));
     }
   };
 
@@ -71,7 +70,7 @@ const AuthenticationProvider = ({ children }) => {
         user,
         signinAction,
         signoutAction,
-        errorMessage,
+        errorMessages,
       }}
     >
       {children}

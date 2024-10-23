@@ -1,8 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url("../../Global.module.css");
 
 :root {
   --main-bg-color-light: #338d9c;
@@ -11,8 +7,14 @@
   --form-bg-color: #365359;
   --form-text-error-color: #ff9328;
   --form-bg-error-color: #fe252566;
+  --form-bg-success-color: #caee0066;
   --form-label-text-color: #555b6d;
   --form-label-bg-color: #232529;
+  --form-input-bg-color: #f7f9fc;
+  --form-input-focus-color: #37dcdc;
+  --form-button-bg-color: #138080;
+  --form-button-hover-color: #23abab;
+  --form-a-hover-color: #43d0d0;
 }
 
 .container {
@@ -21,6 +23,7 @@
   font-family: Roboto, sans-serif;
   display: flex;
   flex-direction: column;
+  gap: 2%;
   align-items: center;
   justify-content: center;
   height: 100vh;
@@ -94,14 +97,14 @@
   border-bottom-right-radius: 5px;
   border: none;
   outline: 0;
-  background-color: #f7f9fc;
+  background-color: var(--form-input-bg-color);
   padding: 0 0.7rem;
   font-size: 1.3rem;
 }
 
 .container .formData input:focus {
   outline: none;
-  box-shadow: 0px 0px 3px 3px #37dcdc;
+  box-shadow: 0px 0px 3px 3px var(--form-input-focus-color);
 }
 
 .container form button {
@@ -109,22 +112,22 @@
   text-align: center;
   height: 3rem;
   border-radius: 5px;
-  background-color: #138080;
-  border-color: #138080;
-  color: #f7f9fc;
+  background-color: var(--form-button-bg-color);
+  border-color: var(--form-button-bg-color);
+  color: var(--form-input-bg-color);
   font-size: 1.3rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-.container form button:hover:enabled {
-  background-color: #23abab;
-  border-color: #23abab;
+.container form button:hover {
+  background-color: var(--form-button-hover-color);
+  border-color: var(--form-button-hover-color);
   transition: all 0.4s ease;
 }
 
 .container form p {
-  color: #f7f9fc;
+  color: var(--form-input-bg-color);
   text-align: center;
   font-size: 1.1rem;
 }
@@ -132,10 +135,10 @@
 .container form p a,
 .container form p a:visited {
   cursor: pointer;
-  color: #23abab;
+  color: var(--form-button-hover-color);
 }
 
 .container form p a:hover {
-  color: #43d0d0;
+  color: var(--form-a-hover-color);
   font-weight: bold;
 }

@@ -15,26 +15,32 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.*;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String NO_PROPERTY = "";
+
     @ExceptionHandler({UsernameAlreadyTakenException.class, EmailAlreadyTakenException.class})
     public ResponseEntity<ExceptionDto> handleUsernameOrEmailAlreadyTakenException(RuntimeException runtimeException) {
-        ExceptionDto exceptionDto = new ExceptionDto(List.of(runtimeException.getMessage()), HttpStatus.BAD_REQUEST.value());
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of((runtimeException.getMessage())))), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({RefreshTokenException.class, RefreshTokenExpiredException.class})
     public ResponseEntity<ExceptionDto> handleRefreshTokenException(RuntimeException runtimeException) {
-        ExceptionDto exceptionDto = new ExceptionDto(List.of(runtimeException.getMessage()), HttpStatus.FORBIDDEN.value());
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of(runtimeException.getMessage()))), HttpStatus.FORBIDDEN.value());
         return new ResponseEntity<>(exceptionDto, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionDto> handleAuthenticationException(RuntimeException exception) {
-        ExceptionDto exceptionDto = new ExceptionDto(List.of("Bad credentials!"), HttpStatus.UNAUTHORIZED.value());
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of("Bad credentials!"))), HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(exceptionDto, HttpStatus.UNAUTHORIZED);
     }
 
@@ -43,11 +49,16 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
                                                                   @NonNull HttpHeaders headers,
                                                                   @NonNull HttpStatusCode status,
                                                                   @NonNull WebRequest request) {
-        List<String> errorMessages = methodArgumentNotValidException.getBindingResult().getFieldErrors().stream()
+        Map<String, List<String>> errorMessages = methodArgumentNotValidException.getBindingResult().getFieldErrors().stream()
                 .filter(Objects::nonNull)
-                .map(FieldError::getDefaultMessage)
-                .toList();
-        ExceptionDto exceptionDto = new ExceptionDto(errorMessages, HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(exceptionDto, HttpStatus.UNAUTHORIZED);
+                .collect(groupingBy(FieldError::getField, mapping(FieldError::getDefaultMessage, toList())));
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(errorMessages.keySet().stream().toList(), errorMessages.values().stream().toList()), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, List<String>> constructExceptionResponse(List<String> property, List<List<String>> messages) {
+        return IntStream.range(0, property.size())
+                .boxed()
+                .collect(toMap(property::get, messages::get));
     }
 }

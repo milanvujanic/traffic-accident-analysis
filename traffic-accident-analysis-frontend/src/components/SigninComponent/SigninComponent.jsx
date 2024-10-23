@@ -1,14 +1,16 @@
 import styles from "./SigninComponent.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import signinFormValidation from "./SigninComponentValidation";
 import { useAuthentication } from "../Authentication/AuthenticationProvider";
 import { PathConstants } from "../../constants/PathConstants";
 import FormInput from "../Reusable/Input/FormInput";
+import PopupSuccessMessages from "../PopupSuccessMessages/PopupSuccessMessages";
+import PopupErrorMessages from "../PopupErrorMessages/PopupErrorMessages";
 
 const SigninComponent = () => {
-  const { signinAction, errorMessage } = useAuthentication();
+  const { signinAction, errorMessages } = useAuthentication();
   const signinForm = signinFormValidation;
 
   const {
@@ -20,18 +22,23 @@ const SigninComponent = () => {
   });
 
   const navigator = useNavigate();
+  const { state } = useLocation();
 
   return (
     <main className={styles.container}>
+      { state && <PopupSuccessMessages successMessage={state.successMessage} /> }
+      { errorMessages !== undefined && <PopupErrorMessages errorMessages={errorMessages} /> }
       <form onSubmit={handleSubmit(signinAction)} noValidate>
-        {errorMessage.map((data) => (
+        {errorMessages.forEach((messages, property) => (
           <p
-            key={data}
+            key={property}
             className={
-              errorMessage ? styles[("error", "signinError")] : styles.hidden
+              messages.length > 0
+                ? styles[("error", "signinError")]
+                : styles.hidden
             }
           >
-            {errorMessage}
+            {messages}
           </p>
         ))}
 

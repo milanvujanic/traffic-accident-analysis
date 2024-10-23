@@ -9,6 +9,7 @@ import com.analizasn.traffic_accident_analysis_backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
-    @PostMapping("/signout")
+    @PostMapping(value = "/signout", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageResponse> signout(HttpServletRequest httpServletRequest) {
         AccessAndRefreshTokenCookies accessAndRefreshTokenCookies = authService.handeSignout(httpServletRequest);
         return ResponseEntity.ok()

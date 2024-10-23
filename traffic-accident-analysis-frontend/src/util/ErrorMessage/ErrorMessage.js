@@ -6,11 +6,13 @@ export const parseErrorMessage = (error) => {
     }
 
     const statusCode = error.response.data.statusCode;
-    const errorMessagePayload = error.response.data.message;
+    const errorMessagePayload = error.response.data.messages;
 
-    if (statusCode === ErrorConstants.CODE_401) {
-      return [...errorMessagePayload];
+    const errorMap = new Map();
+    if (statusCode === ErrorConstants.CODE_400 || statusCode === ErrorConstants.CODE_401) {
+      for (const [value, key] of Object.entries(errorMessagePayload)) {
+        errorMap.set(value, key);
+      }
     }
-
-    return ["Something went wrong..."];
+    return errorMap;
   };

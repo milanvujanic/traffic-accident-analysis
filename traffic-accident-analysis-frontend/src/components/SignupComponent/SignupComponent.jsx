@@ -6,9 +6,11 @@ import signupFormValidation from "./SignupComponentValidation";
 import { PathConstants } from "../../constants/PathConstants";
 import FormInput from "../Reusable/Input/FormInput";
 import SignupComponentUtil from "./SignupComponentUtil";
+import PopupErrorMessages from "../PopupErrorMessages/PopupErrorMessages";
+
 const SignupComponent = () => {
   const signupForm = signupFormValidation;
-  const { errorMessage, hanldeSignup } = SignupComponentUtil();
+  const { errorMessages, hanldeSignup } = SignupComponentUtil();
   const {
     register,
     handleSubmit,
@@ -16,23 +18,12 @@ const SignupComponent = () => {
   } = useForm({
     resolver: zodResolver(signupForm),
   });
-
   const navigator = useNavigate();
 
   return (
     <main className={styles.container}>
-      <form onSubmit={handleSubmit(hanldeSignup)}>
-        {errorMessage.map((data) => (
-          <p
-            key={data}
-            className={
-              errorMessage ? styles[("error", "signinError")] : styles.hidden
-            }
-          >
-            {data}
-          </p>
-        ))}
-
+      { errorMessages !== undefined && <PopupErrorMessages errorMessages={errorMessages} /> }
+      <form onSubmit={handleSubmit(hanldeSignup)} noValidate>
         <FormInput
           id="username"
           icon={<i className="fa-solid fa-user"></i>}
@@ -41,7 +32,6 @@ const SignupComponent = () => {
           errors={errors.username}
           styles={styles}
         />
-
         <FormInput
           id="email"
           icon={<i className="fa-solid fa-envelope"></i>}
@@ -50,7 +40,6 @@ const SignupComponent = () => {
           errors={errors.email}
           styles={styles}
         />
-
         <FormInput
           type="password"
           id="password"
@@ -60,7 +49,6 @@ const SignupComponent = () => {
           errors={errors.password}
           styles={styles}
         />
-
         <FormInput
           type="password"
           id="confirmPassword"
@@ -70,7 +58,6 @@ const SignupComponent = () => {
           errors={errors.confirmPassword}
           styles={styles}
         />
-
         <button type="submit">Sign up</button>
         <p>
           Already have an account?{" "}
