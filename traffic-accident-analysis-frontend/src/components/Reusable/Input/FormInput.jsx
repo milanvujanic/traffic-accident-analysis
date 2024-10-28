@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import PasswordToggle from "./PasswordToggle";
 
 const FormInput = ({
   type = "text",
@@ -13,11 +15,23 @@ const FormInput = ({
     return errors !== undefined && errors.message !== undefined;
   };
 
+  const [inputType, setInputType] = useState(type);
+
+  const handleToggle = (newType) => {
+    setInputType(newType);
+  };
+
   return (
     <div className={formControl}>
       <div className={formData}>
         <label htmlFor={id}>{icon}</label>
-        <input type={type} id={id} placeholder={placeholder} {...register} />
+        <input
+          type={inputType}
+          id={id}
+          placeholder={placeholder}
+          {...register}
+        />
+        {id === "password" && <PasswordToggle onToggle={handleToggle} />}
       </div>
       <p className={isErrorPresent() ? error : hidden}>
         * {isErrorPresent() ? errors.message : ""}

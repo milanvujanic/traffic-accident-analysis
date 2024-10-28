@@ -78,6 +78,16 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+.container form .formData span {
+  position: absolute;
+  right: 0rem;
+  z-index: 10;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
 }
 
 .container .formData label {
