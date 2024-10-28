@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const PasswordToggle = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [eyeIcon, setEyeIcon] = useState(<i className="fa-regular fa-eye"></i>);
+  const [eyeIcon, setEyeIcon] = useState(<i className="fa-regular fa-eye-slash"></i>);
 
   const toggleShowPassword = () => {
     let currentShowPassword = !showPassword;

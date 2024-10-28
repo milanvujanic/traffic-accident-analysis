@@ -19,6 +19,7 @@ const FormInput = ({
 
   const handleToggle = (newType) => {
     setInputType(newType);
+    document.getElementById("password").focus();
   };
 
   return (
