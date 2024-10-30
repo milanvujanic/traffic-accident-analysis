@@ -15,12 +15,13 @@ const FormInput = ({
     return errors !== undefined && errors.message !== undefined;
   };
 
+  // START: show/hide password logic
   const [inputType, setInputType] = useState(type);
-
   const handleToggle = (newType) => {
     setInputType(newType);
     document.getElementById("password").focus();
   };
+  // END: show/hide password logic
 
   return (
     <div className={formControl}>
@@ -32,6 +33,7 @@ const FormInput = ({
           placeholder={placeholder}
           {...register}
         />
+        {/* Render eye icon only for password field */}
         {id === "password" && <PasswordToggle onToggle={handleToggle} />}
       </div>
       <p className={isErrorPresent() ? error : hidden}>

@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<LoginResponse> signin(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<LoginResponse> signin(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
         LoginResponseWithJwtCookies response = authService.handleSignin(loginRequest, httpServletRequest);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, response.getRefreshTokenCookie().toString())
@@ -63,7 +63,7 @@ public class AuthController {
                     .body(new MessageResponse("Token is refreshed successfully!"));
         }
 
-        throw new RefreshTokenException("Refresh token not found in database!");
+        throw new RefreshTokenException("Please sign in again");
     }
 }
 

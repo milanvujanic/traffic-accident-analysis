@@ -82,23 +82,20 @@ public class AuthServiceImpl implements AuthService {
         String csrfToken = jwtService.extractCsrfToken(accessToken);
 
         Optional<RefreshToken> refreshToken = refreshTokenService.findByUser(user);
-        RefreshToken refreshTokenForResponse;
-
-        // Todo: This logic is implemented because of server stopping which leaves refresh token in db
-        // so need to first check whether there is already refresh token assigned to the user
+        RefreshToken processedRefreshToken;
         if (refreshToken.isPresent()) {
             if (refreshTokenService.isRefreshTokenExpired(refreshToken.get())) {
                 refreshTokenService.deleteByUserId(user.getUserId());
-                refreshTokenForResponse = refreshTokenService.createRefreshToken(user.getUserId());
+                processedRefreshToken = refreshTokenService.createRefreshToken(user.getUserId());
             } else {
-                refreshTokenForResponse = refreshToken.get();
+                processedRefreshToken = refreshToken.get();
             }
         } else {
-            refreshTokenForResponse = refreshTokenService.createRefreshToken(user.getUserId());
+            processedRefreshToken = refreshTokenService.createRefreshToken(user.getUserId());
         }
 
         ResponseCookie accessTokenCookie = jwtService.generateAccessTokenCookie(accessToken);
-        ResponseCookie refreshTokenCookie = jwtService.generateRefreshTokenCookie(refreshTokenForResponse.getToken().toString());
+        ResponseCookie refreshTokenCookie = jwtService.generateRefreshTokenCookie(processedRefreshToken.getToken().toString());
 
         return new LoginResponseWithJwtCookies(loginResponse, accessTokenCookie, refreshTokenCookie, csrfToken);
     }

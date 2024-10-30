@@ -1,6 +1,7 @@
 package com.analizasn.traffic_accident_analysis_backend.exception.config;
 
 import com.analizasn.traffic_accident_analysis_backend.exception.*;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -32,7 +33,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({RefreshTokenException.class, RefreshTokenExpiredException.class})
+    @ExceptionHandler({RefreshTokenException.class, RefreshTokenExpiredException.class, ResetPasswordTokenException.class})
     public ResponseEntity<ExceptionDto> handleRefreshTokenException(RuntimeException runtimeException) {
         ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of(runtimeException.getMessage()))), HttpStatus.FORBIDDEN.value());
         return new ResponseEntity<>(exceptionDto, HttpStatus.FORBIDDEN);
@@ -60,5 +61,11 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         return IntStream.range(0, property.size())
                 .boxed()
                 .collect(toMap(property::get, messages::get));
+    }
+
+    @ExceptionHandler(MessagingException.class)
+    public ResponseEntity<ExceptionDto> handleMessagingException(Exception exception) {
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of(exception.getMessage()))), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 }

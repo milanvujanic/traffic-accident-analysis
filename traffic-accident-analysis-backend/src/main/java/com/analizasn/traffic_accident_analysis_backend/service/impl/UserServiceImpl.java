@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User is not registered!"));
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
