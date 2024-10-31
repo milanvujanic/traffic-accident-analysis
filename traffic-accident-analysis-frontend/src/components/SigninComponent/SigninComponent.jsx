@@ -66,6 +66,9 @@ const SigninComponent = () => {
           Don&apos;t have an account?{" "}
           <a onClick={() => navigator(PathConstants.SIGNUP)}>Sign up</a>
         </p>
+        <p className={styles.forgotPassword}>
+          <a onClick={() => navigator(PathConstants.FORGOT_PASSWORD)}>Forgot password?</a>
+        </p>
       </form>
     </main>
   );

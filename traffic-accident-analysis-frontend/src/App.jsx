@@ -6,6 +6,7 @@ import SignupComponent from "./components/SignupComponent/SignupComponent";
 import HomeComponent from "./components/HomeComponent/HomeComponent";
 import SignoutComponent from "./components/SignoutComponent/SignoutComponent";
 import { PathConstants } from "./constants/PathConstants";
+import ForgotPasswordComponent from "./components/ForgotPasswordComponent/ForgotPasswordComponent";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path={PathConstants.SIGNIN} element={<SigninComponent />} />
           <Route path={PathConstants.SIGNUP} element={<SignupComponent />} />
+          <Route path={PathConstants.FORGOT_PASSWORD} element={<ForgotPasswordComponent />} />
           <Route
             path={PathConstants.HOME}
             element={<PrivateRoute Component={HomeComponent} />}

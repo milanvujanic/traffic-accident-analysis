@@ -12,7 +12,11 @@ const axiosConfig = axios.create({
   },
 });
 
-const excludedEndpoints = [ApiConstants.SIGNIN, ApiConstants.SIGNUP];
+const excludedEndpoints = [
+  ApiConstants.SIGNIN,
+  ApiConstants.SIGNUP,
+  ApiConstants.FORGOT_PASSWORD,
+];
 
 axiosConfig.interceptors.request.use(
   (config) => {

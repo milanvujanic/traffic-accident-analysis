@@ -3,4 +3,5 @@ export const PathConstants = Object.freeze({
   SIGNUP: "/signup",
   HOME: "/home",
   SIGNOUT: "/signout",
+  FORGOT_PASSWORD: "/password/forgot"
 });

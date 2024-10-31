@@ -152,3 +152,7 @@
   color: var(--form-a-hover-color);
   font-weight: bold;
 }
+
+.container form .forgotPassword {
+  margin-top: -1rem;
+}

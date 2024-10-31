@@ -4,4 +4,5 @@ export const ApiConstants = Object.freeze({
   SIGNUP: "/auth/signup",
   SIGNOUT: "/auth/signout",
   REFRESH_TOKEN: "/auth/refresh-token",
+  FORGOT_PASSWORD: "/password/forgot"
 });

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import styles from "./PopupSuccessMessages.module.css";
 import { useState, useEffect } from "react";
 
-const PopupSuccessMessages = ({ successMessage }) => {
+const PopupSuccessMessages = ({ successMessage, setSuccessMessages }) => {
   const [currentSuccessMessage, setCurrentSuccessMessage] =
     useState(successMessage);
 
@@ -12,6 +12,9 @@ const PopupSuccessMessages = ({ successMessage }) => {
 
   const handleHideSuccessMessage = () => {
     setCurrentSuccessMessage("");
+    if (setSuccessMessages !== undefined) {
+      setSuccessMessages("");
+    }
   };
 
   return (
@@ -40,6 +43,7 @@ const PopupSuccessMessages = ({ successMessage }) => {
 
 PopupSuccessMessages.propTypes = {
   successMessage: PropTypes.string,
+  setSuccessMessages: PropTypes.func,
 };
 
 export default PopupSuccessMessages;

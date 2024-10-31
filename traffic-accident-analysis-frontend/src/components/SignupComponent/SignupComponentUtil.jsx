@@ -9,7 +9,6 @@ const SignupComponentUtil = () => {
   const [errorMessages, setErrorMessages] = useState(new Map());
   const navigator = useNavigate();
   const hanldeSignup = async (data) => {
-    console.log(data);
     try {
       await axiosConfig.post(ApiConstants.SIGNUP, {
         username: data.username,

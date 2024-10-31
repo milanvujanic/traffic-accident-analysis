@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -29,6 +30,12 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler({UsernameAlreadyTakenException.class, EmailAlreadyTakenException.class})
     public ResponseEntity<ExceptionDto> handleUsernameOrEmailAlreadyTakenException(RuntimeException runtimeException) {
+        ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of((runtimeException.getMessage())))), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity<ExceptionDto> handleNoSuchElementException(RuntimeException runtimeException) {
         ExceptionDto exceptionDto = new ExceptionDto(constructExceptionResponse(List.of(NO_PROPERTY), List.of(List.of((runtimeException.getMessage())))), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
