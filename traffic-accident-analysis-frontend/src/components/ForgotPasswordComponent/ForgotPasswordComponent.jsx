@@ -14,6 +14,7 @@ const ForgotPasswordComponent = () => {
     errorMessages,
     hanldeForgotPassword,
   ] = ForgotPasswordComponentUtil();
+
   const {
     register,
     handleSubmit,
@@ -26,7 +27,7 @@ const ForgotPasswordComponent = () => {
     <main className={styles.container}>
       {
         <PopupSuccessMessages
-          successMessage={successMessages}
+          successMessages={successMessages}
           setSuccessMessages={setSuccessMessages}
         />
       }

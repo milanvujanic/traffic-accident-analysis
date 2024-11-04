@@ -2,13 +2,13 @@ import PropTypes from "prop-types";
 import styles from "./PopupSuccessMessages.module.css";
 import { useState, useEffect } from "react";
 
-const PopupSuccessMessages = ({ successMessage, setSuccessMessages }) => {
+const PopupSuccessMessages = ({ successMessages, setSuccessMessages }) => {
   const [currentSuccessMessage, setCurrentSuccessMessage] =
-    useState(successMessage);
+    useState(successMessages);
 
   useEffect(() => {
-    setCurrentSuccessMessage(successMessage);
-  }, [successMessage]);
+    setCurrentSuccessMessage(successMessages);
+  }, [successMessages]);
 
   const handleHideSuccessMessage = () => {
     setCurrentSuccessMessage("");
@@ -21,7 +21,11 @@ const PopupSuccessMessages = ({ successMessage, setSuccessMessages }) => {
     currentSuccessMessage && (
       <div className={styles.wrapper}>
         <i
-          className="fa-solid fa-rectangle-xmark"
+          className={
+            currentSuccessMessage !== "Sending email..."
+              ? "fa-solid fa-rectangle-xmark"
+              : ""
+          }
           onClick={() => handleHideSuccessMessage()}
         ></i>
 
@@ -42,7 +46,7 @@ const PopupSuccessMessages = ({ successMessage, setSuccessMessages }) => {
 };
 
 PopupSuccessMessages.propTypes = {
-  successMessage: PropTypes.string,
+  successMessages: PropTypes.string,
   setSuccessMessages: PropTypes.func,
 };
 

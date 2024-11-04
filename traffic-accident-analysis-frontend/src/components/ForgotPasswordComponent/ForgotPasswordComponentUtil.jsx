@@ -9,6 +9,7 @@ const ForgotPasswordComponentUtil = () => {
 
   const hanldeForgotPassword = async (data) => {
     try {
+      setSuccessMessages("Sending email...");
       const response = await axiosConfig.post(ApiConstants.FORGOT_PASSWORD, {
         email: data.email,
       });
