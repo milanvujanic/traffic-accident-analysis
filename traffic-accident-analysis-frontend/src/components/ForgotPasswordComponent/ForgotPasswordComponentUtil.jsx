@@ -15,6 +15,7 @@ const ForgotPasswordComponentUtil = () => {
       });
       setSuccessMessages(response.data.message);
     } catch (error) {
+      setSuccessMessages("");
       setErrorMessages(parseErrorMessage(error));
       setErrorFieldFocus(error.response.data.messages);
     }

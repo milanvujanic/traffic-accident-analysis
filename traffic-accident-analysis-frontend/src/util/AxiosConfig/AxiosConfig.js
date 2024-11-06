@@ -16,6 +16,8 @@ const excludedEndpoints = [
   ApiConstants.SIGNIN,
   ApiConstants.SIGNUP,
   ApiConstants.FORGOT_PASSWORD,
+  ApiConstants.FORGOT_PASSWORD_VERIFY_TOKEN,
+  ApiConstants.FORGOT_CHANGE_PASSWORD,
 ];
 
 axiosConfig.interceptors.request.use(

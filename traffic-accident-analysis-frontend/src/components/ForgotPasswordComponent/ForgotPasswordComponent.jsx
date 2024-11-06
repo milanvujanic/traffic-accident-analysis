@@ -25,12 +25,12 @@ const ForgotPasswordComponent = () => {
 
   return (
     <main className={styles.container}>
-      {
+      {successMessages && (
         <PopupSuccessMessages
           successMessages={successMessages}
           setSuccessMessages={setSuccessMessages}
         />
-      }
+      )}
       {errorMessages !== undefined && (
         <PopupErrorMessages errorMessages={errorMessages} />
       )}
@@ -43,7 +43,7 @@ const ForgotPasswordComponent = () => {
           errors={errors.email}
           styles={styles}
         />
-        <button type="submit">Proceed</button>
+        <button type="submit">Send email</button>
       </form>
     </main>
   );

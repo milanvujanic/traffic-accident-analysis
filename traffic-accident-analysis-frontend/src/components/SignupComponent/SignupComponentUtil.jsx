@@ -16,8 +16,8 @@ const SignupComponentUtil = () => {
         password: data.password,
         roles: [],
       });
-      const successMessage = "You have successfully signed up!";
-      navigator(PathConstants.SIGNIN, { state : { successMessage }});
+      const successMessages = "You have successfully signed up!";
+      navigator(PathConstants.SIGNIN, { state : { successMessages }});
     } catch (error) {
       setErrorMessages(parseErrorMessage(error));
       setErrorFieldFocus(error.response.data.messages);

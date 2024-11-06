@@ -26,7 +26,7 @@ const SigninComponent = () => {
 
   return (
     <main className={styles.container}>
-      { state && <PopupSuccessMessages successMessage={state.successMessage} /> }
+      { state && <PopupSuccessMessages successMessages={state.successMessages} /> }
       { errorMessages !== undefined && <PopupErrorMessages errorMessages={errorMessages} /> }
       <form onSubmit={handleSubmit(signinAction)} noValidate>
         {errorMessages.forEach((messages, property) => (

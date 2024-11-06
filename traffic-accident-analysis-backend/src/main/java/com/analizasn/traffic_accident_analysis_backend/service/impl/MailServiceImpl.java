@@ -40,7 +40,7 @@ public class MailServiceImpl implements MailService {
         Map<String, Object> variables = new HashMap<>();
         variables.put("username", user.getUsername());
         variables.put("email", user.getEmail());
-        variables.put("base_url", "http://localhost:3000/");
+        variables.put("base_url", "http://localhost:3000/password/forgot/forward");
 
         ResetPasswordToken resetPasswordToken = getResetPasswordToken(user);
         variables.put("reset_password_token", resetPasswordToken.getToken().toString());

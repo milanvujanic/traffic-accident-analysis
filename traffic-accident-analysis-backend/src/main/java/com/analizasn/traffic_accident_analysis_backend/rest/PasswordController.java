@@ -44,17 +44,17 @@ public class PasswordController {
     }
 
     @PostMapping("/forgot/verify-token")
-    public ResponseEntity<MessageResponse> verifyResetPasswordToken(@RequestBody @Valid VerifyTokenRequest verifyTokenRequest) {
-        ResetPasswordToken resetPasswordToken = resetPasswordTokenService.findByToken(verifyTokenRequest.getResetPasswordToken());
+    public ResponseEntity<VerifyTokenRequest> verifyResetPasswordToken(@RequestBody @Valid VerifyTokenRequest verifyTokenRequest) {
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenService.findByToken(Long.valueOf(verifyTokenRequest.getResetPasswordToken()));
         if (resetPasswordTokenService.isResetPasswordTokenValid(resetPasswordToken)) {
-            return ResponseEntity.ok(new MessageResponse("ResetPasswordToken verified!"));
+            return ResponseEntity.ok(verifyTokenRequest);
         }
         throw new ResetPasswordTokenException("Invalid ResetPasswordToken!");
     }
 
     @PostMapping("/forgot/change-password")
     public ResponseEntity<MessageResponse> changeForgottenPassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
-        ResetPasswordToken resetPasswordToken = resetPasswordTokenService.findByToken(changePasswordRequest.getResetPasswordToken());
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenService.findByToken(Long.valueOf(changePasswordRequest.getResetPasswordToken()));
         if (resetPasswordTokenService.isResetPasswordTokenValid(resetPasswordToken)) {
             User user = resetPasswordToken.getUser();
             user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
