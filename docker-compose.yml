@@ -1,0 +1,55 @@
+services:
+  mysqldb:
+    image: mysql:8.0.40-oracle
+    container_name: mysqldb-container
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./traffic-accident-analysis-backend/db/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+      - mysql-data:/var/lib/mysql
+    networks:
+      - traffic-accident-analysis-network
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$SPRING_DATASOURCE_USERNAME --password=$$MYSQL_ROOT_PASSWORD
+      timeout: 20s
+      retries: 3
+
+  springboot-app:
+    build:
+      context: ./traffic-accident-analysis-backend
+    container_name: springboot-app-container
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    networks:
+      - traffic-accident-analysis-network
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+
+  react-app:
+    build:
+      context: ./traffic-accident-analysis-frontend
+    container_name: react-app-container
+    restart: on-failure
+    ports:
+      - "3000:80"
+    networks:
+      - traffic-accident-analysis-network
+    depends_on:
+      - springboot-app
+
+volumes:
+  mysql-data:
+
+networks:
+  traffic-accident-analysis-network:
