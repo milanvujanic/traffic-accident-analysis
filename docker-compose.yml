@@ -1,14 +1,14 @@
 services:
   mysqldb:
-    image: mysql:8.0.40-oracle
+    image: mysql:9-oracle
     container_name: mysqldb-container
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
       - "3307:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_HOST: '%'
     volumes:
       - ./traffic-accident-analysis-backend/db/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
       - mysql-data:/var/lib/mysql
