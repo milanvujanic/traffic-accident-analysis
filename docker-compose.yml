@@ -20,8 +20,7 @@ services:
       retries: 3
 
   springboot-app:
-    build:
-      context: ./traffic-accident-analysis-backend
+    image: milan79/traffic-accident-analysis-backend:latest
     container_name: springboot-app-container
     restart: on-failure
     ports:
@@ -37,8 +36,7 @@ services:
         condition: service_healthy
 
   react-app:
-    build:
-      context: ./traffic-accident-analysis-frontend
+    image: milan79/traffic-accident-analysis-frontend:latest
     container_name: react-app-container
     restart: on-failure
     ports:
